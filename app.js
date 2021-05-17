@@ -8,9 +8,6 @@ const App = {
         }
     },
     methods: {
-        inputChangeHandler(event) {
-            this.inputValue = event.target.value
-        },
         addNewNote() {
             if(this.inputValue)
             { 
@@ -29,7 +26,23 @@ const App = {
         toUpperCase (item) {
             return item.toUpperCase()
         }
+    },
+    computed: {
+        doubleCount() {
+            return this.notes.length * 2 
+        }
+    },
+    //отслеживание, имя метода должно совпадать с именем отслеживаемой переменой
+    watch: {
+        inputValue(value) {
+            if(value.length > 10){
+                this.inputValue = ""
+            }
+        }
     }
 }
 
 Vue.createApp(App).mount('#app') // подключение(моунтить) Vue к участку html c id="app"
+
+//computed он привязывается к переменой и отслеживает только ее изменения. Первое правило, они дожны что то возращять. причем возращять уже обьявленый обьект
+//

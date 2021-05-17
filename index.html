@@ -10,7 +10,9 @@
 <body>
     <div class="container pt-5" id="app">
         <div class="card">
-            <h1>{{title}}</h1> <!--интерполяция, вставляем обьект из js. внутри интерполяции можно испоьзовать люой JS {{ (counter +2 )*5}}-->
+            <h1 :style="{
+                color: inputValue.length < 5 ? 'darkred' : 'darkgreen',
+                fontSize: inputValue.length < 5 ? '1.5rem' : '2rem'}">{{title}}</h1> <!--интерполяция, вставляем обьект из js. внутри интерполяции можно испоьзовать люой JS {{ (counter +2 )*5}}-->
             <div>
                <!-- <button class="btn primary" v-on:click="counter++">Plus</button>--> <!-- v-on:click -директива, как eventListener-->
                 <!--<button class="btn danger" v-on:click="counter--">Minus</button>>-->
@@ -18,21 +20,27 @@
                     <input 
                         type="text" 
                         :placeholder="placeholderName" 
-                        v-bind:value="inputValue"   
-                        @input="inputChangeHandler"
+                        v-model="inputValue"                           
                         @keypress.enter="addNewNote"
                     >
                 </div>
                 <!--v-bind: - директива, добавление данных, когда динамически передаем значение атрибута ({{ двойные скобки уже не еужны}})-->
                 <!--v-bind - можно заменить ярлыком, обычным двоеточием-->
                 <!--v-on заменяют "@"-->
+                <!--computed вычиляемые данные-->
                 <button class="btn" v-on:click="addNewNote">Add</button>
                 <hr />
                 <ul class="list" v-if="notes.length">
                     <li class="list-item" v-for="(note, idx) in notes">
-                        ({{idx + 1}}) {{ toUpperCase(note) }}
+                        <!--<span :class="note.length < 5 ? 'primary' : 'danger'">({{idx + 1}}) {{ toUpperCase(note) }}</span>-->
+                        <!-- <span :class="{
+                            'primary' : note.length < 5,
+                            'danger' : note.length > 5
+                        }">({{idx + 1}}) {{ toUpperCase(note) }}</span> -->
+                        <span :class="['bold', {'primary' : note.length < 5}]">({{idx + 1}}) {{ toUpperCase(note) }}</span>
                         <button class="btn danger" v-on:click="removeNote(idx)">Remove</button>
-                    </li>                    
+                    </li> 
+                    <li><strong>Overall: {{notes.length}}</strong> Doubled: {{doubleCount}}</li>                   
                 </ul>
                 <!-- v-for директива, цикл. аналог foreach-->                
                 <p v-else>No available notes</p>
@@ -43,3 +51,11 @@
     <script src="app.js"></script>
 </body>
 </html>
+
+<!--v-model и тащит значение и следит за изменениями, заменяем бандинг и eventListener-->
+<!--
+    :style когда нужно прикрутить динамику, можем любой js код написать
+    :class когда имя класса будет зависеть от условий, второй вариант это если нужно больше двух вариантов описать условий
+            третий вариант это как class='bold' :class{'primary' : note.length < 5} (статичный совмещен с динамическим)
+    
+-->
